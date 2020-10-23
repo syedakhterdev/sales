@@ -21,3 +21,4 @@ Route::get('/customers', 'Api\CustomerController@getAllCustomers');
 Route::get('/employees', 'Api\EmployeeController@getAllEmployees');
 
 Route::put('/customers/{id}','Api\CustomerController@update');
+Route::post('/customers','Api\CustomerController@store');

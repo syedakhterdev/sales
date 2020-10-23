@@ -1,8 +1,11 @@
 <template>
     <v-card >
-        <v-card-title>
-
-        </v-card-title>
+        <v-snackbar
+            v-model="snackbar"
+            color="primary"
+        >
+            Data has been save successfully!
+        </v-snackbar>
     <v-data-table
         :headers="headers"
         :items="customers"
@@ -34,7 +37,8 @@
                 >
                     New Item
                 </v-btn>
-                <customer-dialog :dialog="dialog" :editedItem="editedItem" :hideDialog="hideDialog"></customer-dialog>
+                <customer-dialog :dialog="dialog" :editedItem="editedItem" :hideDialog="hideDialog"
+                :editedIndex="editedIndex"></customer-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px">
                     <v-card>
                         <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
@@ -77,6 +81,7 @@
         },
         data: () => ({
             search: '',
+            snackbar: false,
             dialog: false,
             dialogDelete: false,
             headers: [
@@ -96,6 +101,7 @@
             editedIndex: -1,
 
             editedItem: {
+                customerNumber: '',
                 customerName: '',
                 contactLastName: '',
                 contactFirstName: '',
@@ -189,8 +195,17 @@
                     this.editedIndex = -1
                 })
             },
-            hideDialog() {
+            hideDialog(type, data) {
                 this.dialog = false;
+                if(type === 'update') {
+                    Object.assign(this.customers[this.editedIndex], data);
+                    this.snackbar = true;
+                } else if(type === 'add') {
+                    this.customers.push(data);
+                    this.snackbar = true;
+                }
+                this.editedItem = Object.assign({}, this.defaultItem)
+                this.editedIndex = -1
             }
 
 

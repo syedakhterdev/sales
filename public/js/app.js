@@ -2165,17 +2165,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      employees: []
+      employees: [],
+      errors: []
     };
   },
   props: {
     dialog: Boolean,
     hideDialog: Function,
     editedItem: Object,
-    defaultItem: Object
+    defaultItem: Object,
+    editedIndex: Number
   },
   computed: {
     formTitle: function formTitle() {
@@ -2191,23 +2206,28 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     close: function close() {
-      var _this2 = this;
-
       // this.dialog = false;
-      this.hideDialog();
-      this.$nextTick(function () {
-        _this2.editedItem = Object.assign({}, _this2.defaultItem);
-        _this2.editedIndex = -1;
-      });
+      this.hideDialog(null);
     },
     save: function save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.customers[this.editedIndex], this.editedItem);
-      } else {
-        this.customers.push(this.editedItem);
-      }
+      var _this2 = this;
 
-      this.close();
+      if (this.editedIndex > -1) {
+        axios.put('/api/customers/' + this.editedItem.customerNumber, this.editedItem).then(function (response) {
+          if (response.data) {
+            _this2.hideDialog('update', _this2.editedItem);
+          }
+        })["catch"](function (error) {
+          _this2.errors = error.response.data;
+        });
+      } else {
+        axios.post('/api/customers', this.editedItem).then(function (response) {
+          _this2.hideDialog('add', response.data.customer);
+        })["catch"](function (error) {
+          _this2.errors = error.response.data;
+        });
+      } //this.close()
+
     }
   }
 });
@@ -2225,7 +2245,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_NavBar__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/NavBar */ "./resources/js/components/NavBar.vue");
 /* harmony import */ var _components_SideBar__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/SideBar */ "./resources/js/components/SideBar.vue");
-//
 //
 //
 //
@@ -2349,6 +2368,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2357,6 +2380,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       search: '',
+      snackbar: false,
       dialog: false,
       dialogDelete: false,
       headers: [{
@@ -2384,6 +2408,7 @@ __webpack_require__.r(__webpack_exports__);
       customers: [],
       editedIndex: -1,
       editedItem: {
+        customerNumber: '',
         customerName: '',
         contactLastName: '',
         contactFirstName: '',
@@ -2472,8 +2497,19 @@ __webpack_require__.r(__webpack_exports__);
         _this3.editedIndex = -1;
       });
     },
-    hideDialog: function hideDialog() {
+    hideDialog: function hideDialog(type, data) {
       this.dialog = false;
+
+      if (type === 'update') {
+        Object.assign(this.customers[this.editedIndex], data);
+        this.snackbar = true;
+      } else if (type === 'add') {
+        this.customers.push(data);
+        this.snackbar = true;
+      }
+
+      this.editedItem = Object.assign({}, this.defaultItem);
+      this.editedIndex = -1;
     }
   }
 });
@@ -38267,6 +38303,30 @@ var render = function() {
           _c(
             "v-card-text",
             [
+              _vm.errors.length
+                ? _c(
+                    "v-alert",
+                    {
+                      attrs: {
+                        outlined: "",
+                        type: "error",
+                        prominent: "",
+                        border: "left"
+                      }
+                    },
+                    _vm._l(_vm.errors, function(error) {
+                      return _c("div", [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(error) +
+                            "\n                "
+                        )
+                      ])
+                    }),
+                    0
+                  )
+                : _vm._e(),
+              _vm._v(" "),
               _c(
                 "v-container",
                 [
@@ -38278,7 +38338,7 @@ var render = function() {
                         { attrs: { cols: "12", md: "12" } },
                         [
                           _c("v-text-field", {
-                            attrs: { label: "Customer Name" },
+                            attrs: { label: "Customer Name", required: "" },
                             model: {
                               value: _vm.editedItem.customerName,
                               callback: function($$v) {
@@ -38608,7 +38668,20 @@ var render = function() {
   return _c(
     "v-card",
     [
-      _c("v-card-title"),
+      _c(
+        "v-snackbar",
+        {
+          attrs: { color: "primary" },
+          model: {
+            value: _vm.snackbar,
+            callback: function($$v) {
+              _vm.snackbar = $$v
+            },
+            expression: "snackbar"
+          }
+        },
+        [_vm._v("\n        Data has been save successfully!\n    ")]
+      ),
       _vm._v(" "),
       _c("v-data-table", {
         staticClass: "elevation-1",
@@ -38668,7 +38741,8 @@ var render = function() {
                       attrs: {
                         dialog: _vm.dialog,
                         editedItem: _vm.editedItem,
-                        hideDialog: _vm.hideDialog
+                        hideDialog: _vm.hideDialog,
+                        editedIndex: _vm.editedIndex
                       }
                     }),
                     _vm._v(" "),

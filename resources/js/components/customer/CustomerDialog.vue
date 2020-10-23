@@ -10,12 +10,25 @@
             </v-card-title>
 
             <v-card-text>
+                <v-alert
+                    v-if="errors.length"
+                    outlined
+                    type="error"
+                    prominent
+                    border="left"
+                >
+                    <div v-for="error in errors">
+                        {{ error }}
+                    </div>
+                </v-alert>
                 <v-container>
                     <v-row>
                         <v-col cols="12" md="12">
                             <v-text-field
                                 v-model="editedItem.customerName"
                                 label="Customer Name"
+                                required
+
                             ></v-text-field>
                         </v-col>
                         <v-col
@@ -158,13 +171,16 @@
 <script>
     export default {
         data: () => ({
-            employees: []
+            employees: [],
+            errors: [],
+
         }),
         props: {
             dialog: Boolean,
             hideDialog: Function,
             editedItem: Object,
-            defaultItem: Object
+            defaultItem: Object,
+            editedIndex: Number
         },
         computed: {
             formTitle () {
@@ -180,19 +196,28 @@
         methods: {
             close () {
                 // this.dialog = false;
-                this.hideDialog();
-                this.$nextTick(() => {
-                    this.editedItem = Object.assign({}, this.defaultItem)
-                    this.editedIndex = -1
-                })
+                this.hideDialog(null);
+
             },
             save () {
                 if (this.editedIndex > -1) {
-                    Object.assign(this.customers[this.editedIndex], this.editedItem)
+                    axios.put('/api/customers/' + this.editedItem.customerNumber, this.editedItem)
+                    .then((response) => {
+                        if(response.data) {
+                            this.hideDialog('update',this.editedItem);
+                        }
+                    }).catch((error) => {
+                        this.errors = error.response.data;
+                    });
                 } else {
-                    this.customers.push(this.editedItem)
+                    axios.post('/api/customers', this.editedItem)
+                    .then((response) => {
+                        this.hideDialog('add', response.data.customer);
+                    }).catch((error) => {
+                        this.errors = error.response.data;
+                    });
                 }
-                this.close()
+                //this.close()
             },
         }
     }
