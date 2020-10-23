@@ -2097,9 +2097,79 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {};
+    return {
+      employees: []
+    };
   },
   props: {
     dialog: Boolean,
@@ -2112,15 +2182,22 @@ __webpack_require__.r(__webpack_exports__);
       return this.editedIndex === -1 ? 'New Customer' : 'Edit Customer';
     }
   },
+  created: function created() {
+    var _this = this;
+
+    axios.get('/api/employees').then(function (response) {
+      _this.employees = response.data;
+    });
+  },
   methods: {
     close: function close() {
-      var _this = this;
+      var _this2 = this;
 
       // this.dialog = false;
       this.hideDialog();
       this.$nextTick(function () {
-        _this.editedItem = Object.assign({}, _this.defaultItem);
-        _this.editedIndex = -1;
+        _this2.editedItem = Object.assign({}, _this2.defaultItem);
+        _this2.editedIndex = -1;
       });
     },
     save: function save() {
@@ -2272,11 +2349,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2312,6 +2384,7 @@ __webpack_require__.r(__webpack_exports__);
       customers: [],
       editedIndex: -1,
       editedItem: {
+        customerName: '',
         contactLastName: '',
         contactFirstName: '',
         phone: '',
@@ -2325,6 +2398,7 @@ __webpack_require__.r(__webpack_exports__);
         creditLimit: ''
       },
       defaultItem: {
+        customerName: '',
         contactLastName: '',
         contactFirstName: '',
         phone: '',
@@ -38171,7 +38245,7 @@ var render = function() {
   return _c(
     "v-dialog",
     {
-      attrs: { "max-width": "500px" },
+      attrs: { "max-width": "650px" },
       model: {
         value: _vm.dialog,
         callback: function($$v) {
@@ -38201,16 +38275,38 @@ var render = function() {
                     [
                       _c(
                         "v-col",
+                        { attrs: { cols: "12", md: "12" } },
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "Customer Name" },
+                            model: {
+                              value: _vm.editedItem.customerName,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedItem, "customerName", $$v)
+                              },
+                              expression: "editedItem.customerName"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
                         { attrs: { cols: "12", sm: "6", md: "4" } },
                         [
                           _c("v-text-field", {
                             attrs: { label: "First Name" },
                             model: {
-                              value: _vm.editedItem.name,
+                              value: _vm.editedItem.contactFirstName,
                               callback: function($$v) {
-                                _vm.$set(_vm.editedItem, "name", $$v)
+                                _vm.$set(
+                                  _vm.editedItem,
+                                  "contactFirstName",
+                                  $$v
+                                )
                               },
-                              expression: "editedItem.name"
+                              expression: "editedItem.contactFirstName"
                             }
                           })
                         ],
@@ -38222,13 +38318,13 @@ var render = function() {
                         { attrs: { cols: "12", sm: "6", md: "4" } },
                         [
                           _c("v-text-field", {
-                            attrs: { label: "Calories" },
+                            attrs: { label: "Last Name" },
                             model: {
-                              value: _vm.editedItem.calories,
+                              value: _vm.editedItem.contactLastName,
                               callback: function($$v) {
-                                _vm.$set(_vm.editedItem, "calories", $$v)
+                                _vm.$set(_vm.editedItem, "contactLastName", $$v)
                               },
-                              expression: "editedItem.calories"
+                              expression: "editedItem.contactLastName"
                             }
                           })
                         ],
@@ -38240,13 +38336,49 @@ var render = function() {
                         { attrs: { cols: "12", sm: "6", md: "4" } },
                         [
                           _c("v-text-field", {
-                            attrs: { label: "Fat (g)" },
+                            attrs: { label: "Phone" },
                             model: {
-                              value: _vm.editedItem.fat,
+                              value: _vm.editedItem.phone,
                               callback: function($$v) {
-                                _vm.$set(_vm.editedItem, "fat", $$v)
+                                _vm.$set(_vm.editedItem, "phone", $$v)
                               },
-                              expression: "editedItem.fat"
+                              expression: "editedItem.phone"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", sm: "12", md: "12" } },
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "Address Line 1" },
+                            model: {
+                              value: _vm.editedItem.addressLine1,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedItem, "addressLine1", $$v)
+                              },
+                              expression: "editedItem.addressLine1"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", sm: "12", md: "12" } },
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "Address Line 2" },
+                            model: {
+                              value: _vm.editedItem.addressLine2,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedItem, "addressLine2", $$v)
+                              },
+                              expression: "editedItem.addressLine2"
                             }
                           })
                         ],
@@ -38258,13 +38390,13 @@ var render = function() {
                         { attrs: { cols: "12", sm: "6", md: "4" } },
                         [
                           _c("v-text-field", {
-                            attrs: { label: "Carbs (g)" },
+                            attrs: { label: "Country" },
                             model: {
-                              value: _vm.editedItem.carbs,
+                              value: _vm.editedItem.country,
                               callback: function($$v) {
-                                _vm.$set(_vm.editedItem, "carbs", $$v)
+                                _vm.$set(_vm.editedItem, "country", $$v)
                               },
-                              expression: "editedItem.carbs"
+                              expression: "editedItem.country"
                             }
                           })
                         ],
@@ -38276,13 +38408,94 @@ var render = function() {
                         { attrs: { cols: "12", sm: "6", md: "4" } },
                         [
                           _c("v-text-field", {
-                            attrs: { label: "Protein (g)" },
+                            attrs: { label: "State" },
                             model: {
-                              value: _vm.editedItem.protein,
+                              value: _vm.editedItem.state,
                               callback: function($$v) {
-                                _vm.$set(_vm.editedItem, "protein", $$v)
+                                _vm.$set(_vm.editedItem, "state", $$v)
                               },
-                              expression: "editedItem.protein"
+                              expression: "editedItem.state"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", sm: "6", md: "4" } },
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "City" },
+                            model: {
+                              value: _vm.editedItem.city,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedItem, "city", $$v)
+                              },
+                              expression: "editedItem.city"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", sm: "6", md: "4" } },
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "Postal Code" },
+                            model: {
+                              value: _vm.editedItem.postalCode,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedItem, "postalCode", $$v)
+                              },
+                              expression: "editedItem.postalCode"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", sm: "6", md: "4" } },
+                        [
+                          _c("v-text-field", {
+                            attrs: { label: "Postal Code" },
+                            model: {
+                              value: _vm.editedItem.postalCode,
+                              callback: function($$v) {
+                                _vm.$set(_vm.editedItem, "postalCode", $$v)
+                              },
+                              expression: "editedItem.postalCode"
+                            }
+                          })
+                        ],
+                        1
+                      ),
+                      _vm._v(" "),
+                      _c(
+                        "v-col",
+                        { attrs: { cols: "12", sm: "6", md: "4" } },
+                        [
+                          _c("v-select", {
+                            attrs: {
+                              items: _vm.employees,
+                              "item-text": "full_name",
+                              "item-value": "employeeNumber",
+                              label: "Sales Rep"
+                            },
+                            model: {
+                              value: _vm.editedItem.salesRepEmployeeNumber,
+                              callback: function($$v) {
+                                _vm.$set(
+                                  _vm.editedItem,
+                                  "salesRepEmployeeNumber",
+                                  $$v
+                                )
+                              },
+                              expression: "editedItem.salesRepEmployeeNumber"
                             }
                           })
                         ],
@@ -38452,7 +38665,11 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c("customer-dialog", {
-                      attrs: { dialog: _vm.dialog, hideDialog: _vm.hideDialog }
+                      attrs: {
+                        dialog: _vm.dialog,
+                        editedItem: _vm.editedItem,
+                        hideDialog: _vm.hideDialog
+                      }
                     }),
                     _vm._v(" "),
                     _c(
@@ -38534,19 +38751,6 @@ var render = function() {
                     }
                   },
                   [_vm._v("\n            mdi-pencil\n        ")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "v-icon",
-                  {
-                    attrs: { small: "" },
-                    on: {
-                      click: function($event) {
-                        return _vm.deleteItem(item)
-                      }
-                    }
-                  },
-                  [_vm._v("\n            mdi-delete\n        ")]
                 )
               ]
             }

@@ -18,3 +18,6 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 Route::get('/customers', 'Api\CustomerController@getAllCustomers');
+Route::get('/employees', 'Api\EmployeeController@getAllEmployees');
+
+Route::put('/customers/{id}','Api\CustomerController@update');

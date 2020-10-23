@@ -34,7 +34,7 @@
                 >
                     New Item
                 </v-btn>
-                <customer-dialog :dialog="dialog" :hideDialog="hideDialog"></customer-dialog>
+                <customer-dialog :dialog="dialog" :editedItem="editedItem" :hideDialog="hideDialog"></customer-dialog>
                 <v-dialog v-model="dialogDelete" max-width="500px">
                     <v-card>
                         <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
@@ -56,12 +56,7 @@
             >
                 mdi-pencil
             </v-icon>
-            <v-icon
-                small
-                @click="deleteItem(item)"
-            >
-                mdi-delete
-            </v-icon>
+
         </template>
         <template v-slot:no-data>
             <v-btn
@@ -101,6 +96,7 @@
             editedIndex: -1,
 
             editedItem: {
+                customerName: '',
                 contactLastName: '',
                 contactFirstName: '',
                 phone: '',
@@ -114,6 +110,7 @@
                 creditLimit: ''
             },
             defaultItem: {
+                customerName: '',
                 contactLastName: '',
                 contactFirstName: '',
                 phone: '',
