@@ -5,9 +5,37 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
+import Vuetify from 'vuetify'
+import App from "./layout/App";
+import Product from "./pages/Product";
+import Order from './pages/Order';
+import Customer from "./pages/Customer";
 
+import VueRouter from 'vue-router'
+Vue.use(VueRouter);
+Vue.use(Vuetify);
+
+const router = new VueRouter({
+    mode: 'history',
+    routes: [
+        {
+            path: '/',
+            name: 'customer',
+            component: Customer
+        },
+        {
+            path: '/orders',
+            name: 'order',
+            component: Order,
+        },
+        {
+            path: '/products',
+            name: 'product',
+            component: Product,
+        },
+    ],
+});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -19,8 +47,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
-
+// Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -29,4 +56,7 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    router,
+    vuetify: new Vuetify(),
+    render: h => h(App)
 });
